@@ -242,7 +242,7 @@ void Image::Init(Handle<Object> target)
     proto->Set(NanNew("threshold"),
                NanNew<FunctionTemplate>(Threshold)->GetFunction());
     proto->Set(NanNew("toBinary"),
-               NanNew<FunctionTemplate>(ToGray)->GetFunction());
+               NanNew<FunctionTemplate>(ToBinary)->GetFunction());
     proto->Set(NanNew("toGray"),
                NanNew<FunctionTemplate>(ToGray)->GetFunction());
     proto->Set(NanNew("toColor"),
