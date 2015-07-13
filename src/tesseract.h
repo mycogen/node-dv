@@ -49,6 +49,7 @@ private:
     static NAN_METHOD(FindWords);
     static NAN_METHOD(FindSymbols);
     static NAN_METHOD(FindText);
+    static NAN_METHOD(FindOrientation);
 
     Tesseract(const char *datapath, const char *language);
     ~Tesseract();

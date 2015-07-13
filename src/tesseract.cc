@@ -16,6 +16,7 @@
 #include <resultiterator.h>
 #include <tesseractclass.h>
 #include <params.h>
+#include <osdetect.h>
 
 using namespace v8;
 using namespace node;
@@ -75,6 +76,8 @@ void Tesseract::Init(Handle<Object> target)
                NanNew<FunctionTemplate>(FindSymbols)->GetFunction());
     proto->Set(NanNew("findText"),
                NanNew<FunctionTemplate>(FindText)->GetFunction());
+    proto->Set(NanNew("findOrientation"),
+               NanNew<FunctionTemplate>(FindOrientation)->GetFunction());
     target->Set(NanNew("Tesseract"), constructor_template->GetFunction());
 }
 
@@ -439,6 +442,24 @@ NAN_METHOD(Tesseract::FindText)
                  "(\"unlv\", [withConfidence]) or "
                  "(\"hocr\", pageNumber: Int32, [withConfidence]) or "
                  "(\"box\", pageNumber: Int32, [withConfidence])");
+}
+
+NAN_METHOD(Tesseract::FindOrientation)
+{
+    NanScope();
+    Tesseract* obj = ObjectWrap::Unwrap<Tesseract>(args.This());
+
+    OSResults *orientationStruct = new OSResults;
+    obj->api_.DetectOS(orientationStruct);
+    OSBestResult bestResult = orientationStruct->best_result;
+
+    Handle<Object> info = NanNew<Object>();
+    info->Set(NanNewl("orientation"), NanNew<Int32>(bestResult.orientation_id));
+    info->Set(NanNew("script"), NanNew<Int32>(bestResult.script_id));
+    info->Set(NanNew("sconfidence"), NanNew<Number>w(bestResult.sconfidence));
+    info->Set(NanNew("oconfidence"), NanNew<Number>(bestResult.oconfidence));
+
+    NanReturnValue(info);
 }
 
 Tesseract::Tesseract(const char *datapath, const char *language)
