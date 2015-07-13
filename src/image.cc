@@ -217,6 +217,8 @@ void Image::Init(Handle<Object> target)
                NanNew<FunctionTemplate>(Unsharp)->GetFunction());
     proto->Set(NanNew("rotate"),
                NanNew<FunctionTemplate>(Rotate)->GetFunction());
+    proto->Set(NanNew("resize"),
+               NanNew<FunctionTemplate>(Resize)->GetFunction());
     proto->Set(NanNew("scale"),
                NanNew<FunctionTemplate>(Scale)->GetFunction());
     proto->Set(NanNew("crop"),
@@ -239,6 +241,8 @@ void Image::Init(Handle<Object> target)
                NanNew<FunctionTemplate>(MedianCutQuant)->GetFunction());
     proto->Set(NanNew("threshold"),
                NanNew<FunctionTemplate>(Threshold)->GetFunction());
+    proto->Set(NanNew("toBinary"),
+               NanNew<FunctionTemplate>(ToGray)->GetFunction());
     proto->Set(NanNew("toGray"),
                NanNew<FunctionTemplate>(ToGray)->GetFunction());
     proto->Set(NanNew("toColor"),
@@ -265,6 +269,8 @@ void Image::Init(Handle<Object> target)
                NanNew<FunctionTemplate>(LineSegments)->GetFunction());
     proto->Set(NanNew("findSkew"),
                NanNew<FunctionTemplate>(FindSkew)->GetFunction());
+    proto->Set(NanNew("deskew"),
+               NanNew<FunctionTemplate>(Deskew)->GetFunction());
     proto->Set(NanNew("connectedComponents"),
                NanNew<FunctionTemplate>(ConnectedComponents)->GetFunction());
     proto->Set(NanNew("distanceFunction"),
@@ -586,6 +592,24 @@ NAN_METHOD(Image::Rotate)
     }
 }
 
+
+NAN_METHOD(Image::Resize)
+{
+    NanScope();
+    Image *obj = ObjectWrap::Unwrap<Image>(args.This());
+    if (args[0]->IsInt32() && (args.Length() != 2 || args[1]->IsInt32())) {
+        float resizeX = static_cast<float>(args[0]->Int32Value());
+        float resizeY = static_cast<float>(args.Length() == 2 ? args[1]->Int32Value() : resizeX);
+        Pix *pixd = pixScaleToSize(obj->pix_, resizeX, resizeY);
+        if (pixd == NULL) {
+            return NanThrowTypeError("error while resizing");
+        }
+        NanReturnValue(Image::New(pixd));
+    } else {
+        return NanThrowTypeError("expected (resizeX: Int32, [resizeY: Int32])");
+    }
+}
+
 NAN_METHOD(Image::Scale)
 {
     NanScope();
@@ -806,6 +830,13 @@ NAN_METHOD(Image::Threshold)
     } else {
         return NanThrowTypeError("expected (value: Int32)");
     }
+}
+
+NAN_METHOD(Image::ToBinary)
+{
+    NanScope();
+    Image *obj = ObjectWrap::Unwrap<Image>(args.This());
+    NanReturnValue(Image::New(pixDitherToBinary(obj->pix_)));
 }
 
 NAN_METHOD(Image::ToGray)
@@ -1117,6 +1148,17 @@ NAN_METHOD(Image::FindSkew)
     } else {
         return NanThrowError("angle measurment not valid");
     }
+}
+
+NAN_METHOD(Image::Deskew)
+{
+    NanScope();
+    Image *obj = ObjectWrap::Unwrap<Image>(args.This());
+    int reduction = 0;
+    if (args.Length() == 1 && args[0]->IsInt32()) {
+        reduction = args[0]->Int32Value();
+    }
+    NanReturnValue(Image::New(pixDeskew(obj->pix_, reduction)));
 }
 
 NAN_METHOD(Image::ConnectedComponents)

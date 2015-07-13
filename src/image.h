@@ -46,6 +46,7 @@ private:
     static NAN_METHOD(Convolve);
     static NAN_METHOD(Unsharp);
     static NAN_METHOD(Rotate);
+    static NAN_METHOD(Resize);
     static NAN_METHOD(Scale);
     static NAN_METHOD(Crop);
     static NAN_METHOD(InRange);
@@ -57,6 +58,7 @@ private:
     static NAN_METHOD(OctreeColorQuant);
     static NAN_METHOD(MedianCutQuant);
     static NAN_METHOD(Threshold);
+    static NAN_METHOD(ToBinary);
     static NAN_METHOD(ToGray);
     static NAN_METHOD(ToColor);
     static NAN_METHOD(ToHSV);
@@ -70,6 +72,7 @@ private:
     static NAN_METHOD(OtsuAdaptiveThreshold);
     static NAN_METHOD(LineSegments);
     static NAN_METHOD(FindSkew);
+    static NAN_METHOD(Deskew);
     static NAN_METHOD(ConnectedComponents);
     static NAN_METHOD(DistanceFunction);
     static NAN_METHOD(ClearBox);
