@@ -15,9 +15,9 @@
     "tesseract",
     "zxing"
   ],
-  "homepage": "https://github.com/creatale/node-dv",
+  "homepage": "https://github.com/mycogen/node-dv",
   "bugs": {
-    "url": "https://github.com/creatale/node-dv/issues"
+    "url": "https://github.com/mycogen/node-dv/issues"
   },
   "author": "creatale GmbH <contact@creatale.de>",
   "contributors": [
@@ -31,14 +31,14 @@
   "main": "./lib/dv",
   "repository": {
     "type": "git",
-    "url": "git://github.com/creatale/node-dv.git"
+    "url": "git://github.com/mycogen/node-dv.git"
   },
   "scripts": {
     "postinstall": "node-gyp clean",
     "test": "mocha test"
   },
   "dependencies": {
-    "dv.data": "1.2.1",
+    "dv.data": "mycogen/node-dv.data",
     "nan": "1.7.0",
     "node-gyp": "^1.0.3"
   },
