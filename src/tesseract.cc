@@ -454,9 +454,9 @@ NAN_METHOD(Tesseract::FindOrientation)
     OSBestResult bestResult = orientationStruct->best_result;
 
     Handle<Object> info = NanNew<Object>();
-    info->Set(NanNewl("orientation"), NanNew<Int32>(bestResult.orientation_id));
+    info->Set(NanNew("orientation"), NanNew<Int32>(bestResult.orientation_id));
     info->Set(NanNew("script"), NanNew<Int32>(bestResult.script_id));
-    info->Set(NanNew("sconfidence"), NanNew<Number>w(bestResult.sconfidence));
+    info->Set(NanNew("sconfidence"), NanNew<Number>(bestResult.sconfidence));
     info->Set(NanNew("oconfidence"), NanNew<Number>(bestResult.oconfidence));
 
     NanReturnValue(info);
