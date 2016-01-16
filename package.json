@@ -1,6 +1,6 @@
 {
   "name": "dv",
-  "version": "1.9.3",
+  "version": "1.10.1",
   "description": "DocumentVision is a node.js library for processing and understanding scanned documents",
   "keywords": [
     "graphics",
@@ -39,15 +39,15 @@
   },
   "dependencies": {
     "dv.data": "mycogen/node-dv.data",
-    "nan": "1.7.0",
-    "node-gyp": "^1.0.3"
+    "nan": "2.1.0",
+    "node-gyp": "3.x"
   },
   "devDependencies": {
     "mocha": "2.x",
-    "chai": "1.x"
+    "chai": "3.x"
   },
   "engines": {
-    "node": ">=0.8.x"
+    "node": ">=0.10.x"
   },
   "license": "MIT"
 }
