@@ -436,20 +436,23 @@ NAN_METHOD(Tesseract::FindText)
 
 NAN_METHOD(Tesseract::FindOrientation)
 {
-    NanScope();
-    Tesseract* obj = ObjectWrap::Unwrap<Tesseract>(args.This());
+    Tesseract* obj = Nan::ObjectWrap::Unwrap<Tesseract>(info.This());
 
     OSResults *orientationStruct = new OSResults;
-    obj->api_.DetectOS(orientationStruct);
-    OSBestResult bestResult = orientationStruct->best_result;
+    int error = obj->api_.DetectOS(orientationStruct);
+    if (error == 0) {
+        OSBestResult bestResult = orientationStruct->best_result;
 
-    Handle<Object> info = NanNew<Object>();
-    info->Set(NanNew("orientation"), NanNew<Int32>(bestResult.orientation_id));
-    info->Set(NanNew("script"), NanNew<Int32>(bestResult.script_id));
-    info->Set(NanNew("sconfidence"), NanNew<Number>(bestResult.sconfidence));
-    info->Set(NanNew("oconfidence"), NanNew<Number>(bestResult.oconfidence));
-
-    NanReturnValue(info);
+        Local<Object> result = Nan::New<Object>();
+        result->Set(Nan::New("orientation").ToLocalChecked(), Nan::New<Int32>(bestResult.orientation_id));
+        result->Set(Nan::New("script").ToLocalChecked(), Nan::New<Int32>(bestResult.script_id));
+        result->Set(Nan::New("sconfidence").ToLocalChecked(), Nan::New<Number>(bestResult.sconfidence));
+        result->Set(Nan::New("oconfidence").ToLocalChecked(), Nan::New<Number>(bestResult.oconfidence));
+        info.GetReturnValue().Set(result);
+    } else {
+        return Nan::ThrowError("can't find orientation");
+    }
+    
 }
 
 Tesseract::Tesseract(const char *datapath, const char *language)

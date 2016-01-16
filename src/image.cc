@@ -560,18 +560,17 @@ NAN_METHOD(Image::Rotate)
 
 NAN_METHOD(Image::Resize)
 {
-    NanScope();
-    Image *obj = ObjectWrap::Unwrap<Image>(args.This());
-    if (args[0]->IsInt32() && (args.Length() != 2 || args[1]->IsInt32())) {
-        float resizeX = static_cast<float>(args[0]->Int32Value());
-        float resizeY = static_cast<float>(args.Length() == 2 ? args[1]->Int32Value() : resizeX);
+    Image *obj = Nan::ObjectWrap::Unwrap<Image>(info.This());
+    if (info[0]->IsInt32() && (info.Length() != 2 || info[1]->IsInt32())) {
+        float resizeX = static_cast<float>(info[0]->Int32Value());
+        float resizeY = static_cast<float>(info.Length() == 2 ? info[1]->Int32Value() : resizeX);
         Pix *pixd = pixScaleToSize(obj->pix_, resizeX, resizeY);
         if (pixd == NULL) {
-            return NanThrowTypeError("error while resizing");
+            return Nan::ThrowTypeError("error while resizing");
         }
-        NanReturnValue(Image::New(pixd));
+        info.GetReturnValue().Set(Image::New(pixd));
     } else {
-        return NanThrowTypeError("expected (resizeX: Int32, [resizeY: Int32])");
+        return Nan::ThrowTypeError("expected (resizeX: Int32, [resizeY: Int32])");
     }
 }
 
@@ -788,9 +787,8 @@ NAN_METHOD(Image::Threshold)
 
 NAN_METHOD(Image::ToBinary)
 {
-    NanScope();
-    Image *obj = ObjectWrap::Unwrap<Image>(args.This());
-    NanReturnValue(Image::New(pixDitherToBinary(obj->pix_)));
+    Image *obj = Nan::ObjectWrap::Unwrap<Image>(info.This());
+    info.GetReturnValue().Set(Image::New(pixDitherToBinary(obj->pix_)));
 }
 
 NAN_METHOD(Image::ToGray)
@@ -1112,13 +1110,12 @@ NAN_METHOD(Image::FindSkew)
 
 NAN_METHOD(Image::Deskew)
 {
-    NanScope();
-    Image *obj = ObjectWrap::Unwrap<Image>(args.This());
+    Image *obj = Nan::ObjectWrap::Unwrap<Image>(info.Holder());
     int reduction = 0;
-    if (args.Length() == 1 && args[0]->IsInt32()) {
-        reduction = args[0]->Int32Value();
+    if (info.Length() == 1 && info[0]->IsInt32()) {
+        reduction = info[0]->Int32Value();
     }
-    NanReturnValue(Image::New(pixDeskew(obj->pix_, reduction)));
+    info.GetReturnValue().Set(Image::New(pixDeskew(obj->pix_, reduction)));
 }
 
 NAN_METHOD(Image::ConnectedComponents)
